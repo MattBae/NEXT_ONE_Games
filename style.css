@@ -1,15 +1,62 @@
 body {
-    text-align: center;
     font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+button {
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #666;
+}
+
+#boxContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.box {
+    width: 100px;
+    height: 50px;
+    background-color: gray;
+    color: white;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.correct-box {
+    background-color: gold;
 }
 
 #gameCanvas {
     border: 2px solid black;
-    background-color: lightgray;
+    background-color: white;
+    display: block;
+    margin: 20px auto;
 }
 
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 16px;
+#restartGame {
+    display: none;
+    margin-top: 20px;
+    background-color: red;
 }

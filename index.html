@@ -3,19 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>정답을 맞춰라!</title>
+    <title>게임 시작</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>정답을 맞춰라!</h1>
+    <!-- 역할 선택 화면 (처음 화면) -->
     <div id="roleSelection">
+        <h1>역할을 선택하세요!</h1>
         <button id="judgeMode">심판 모드</button>
         <button id="playerMode">플레이어 모드</button>
+        <button id="observerMode">관찰자 모드</button>
     </div>
-    <div id="gameScreen" style="display: none;">
+
+    <!-- 심판 화면 (이미지 3) -->
+    <div id="judgeScreen" class="hidden">
+        <h2>몇 개의 박스를 생성할까요?</h2>
+        <input type="number" id="boxCount" placeholder="숫자를 입력하세요">
+        <button id="generateBoxes">단어 생성하러 가기</button>
+    </div>
+
+    <!-- 플레이어 및 관찰자 대기 화면 (이미지 4) -->
+    <div id="waitingScreen" class="hidden">
+        <h2>잠시 기다리세요...</h2>
+    </div>
+
+    <!-- 텍스트 박스 입력 화면 (심판) -->
+    <div id="wordInputScreen" class="hidden">
+        <h2>단어를 입력하세요</h2>
+        <div id="boxContainer"></div>
+        <button id="startRound">Round Start!</button>
+    </div>
+
+    <!-- 게임 진행 화면 -->
+    <div id="gameScreen" class="hidden">
         <canvas id="gameCanvas"></canvas>
-        <button id="startRound" style="display: none;">Round Start</button>
+        <button id="restartGame" class="hidden">처음으로 돌아가기</button>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
