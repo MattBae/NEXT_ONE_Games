@@ -13,110 +13,93 @@ document.addEventListener("DOMContentLoaded", () => {
     const observerModeBtn = document.getElementById("observerMode");
     const generateBoxesBtn = document.getElementById("generateBoxes");
     const startRoundBtn = document.getElementById("startRound");
-    
+
     let boxCount = 0;
     let boxes = [];
     let correctBoxIndex = -1;
+    let words = [];
     let player = { x: 50, y: 50, size: 30 };
     let speed = 5;
-    
+
     // 역할 선택 화면
     judgeModeBtn.addEventListener("click", () => {
         roleSelection.classList.add("hidden");
         judgeScreen.classList.remove("hidden");
     });
-    
+
     playerModeBtn.addEventListener("click", () => {
         roleSelection.classList.add("hidden");
         waitingScreen.classList.remove("hidden");
     });
-    
+
     observerModeBtn.addEventListener("click", () => {
         roleSelection.classList.add("hidden");
         gameScreen.classList.remove("hidden");
     });
-    
-    // 박스 생성
+
+    // 박스 생성 및 단어 입력 화면 이동
     generateBoxesBtn.addEventListener("click", () => {
         boxCount = parseInt(document.getElementById("boxCount").value);
         if (isNaN(boxCount) || boxCount < 1) return;
-        
+
         judgeScreen.classList.add("hidden");
         wordInputScreen.classList.remove("hidden");
-        
+
         boxContainer.innerHTML = "";
         boxes = [];
-        
+        words = [];
+
         correctBoxIndex = Math.floor(Math.random() * boxCount);
-        
+
         for (let i = 0; i < boxCount; i++) {
             const box = document.createElement("div");
             box.classList.add("box");
-            box.textContent = "단어";
-            box.style.left = `${Math.random() * 700 + 50}px`;
-            box.style.top = `${Math.random() * 500 + 50}px`;
+
+            // 텍스트 입력 필드 추가
+            const inputField = document.createElement("input");
+            inputField.type = "text";
+            inputField.placeholder = "단어 입력";
+            inputField.classList.add("word-input");
+            
+            // 정답 박스 구분
             if (i === correctBoxIndex) {
                 box.classList.add("correct-box");
             }
-            gameScreen.appendChild(box);
-            boxes.push(box);
+
+            box.appendChild(inputField);
+            boxContainer.appendChild(box);
+            boxes.push(inputField);
         }
     });
-    
-    // 라운드 시작
+
+    // 라운드 시작 (입력된 단어들을 반영하여 게임 화면 이동)
     startRoundBtn.addEventListener("click", () => {
+        words = boxes.map(input => input.value || "기본단어");
+
+        // 단어 박스를 실제 게임 화면에 반영
         wordInputScreen.classList.add("hidden");
         gameScreen.classList.remove("hidden");
-        initGame();
-    });
-    
-    // 게임 로직
-    function initGame() {
-        const ctx = gameCanvas.getContext("2d");
-        gameCanvas.width = 800;
-        gameCanvas.height = 600;
-        
-        document.addEventListener("keydown", movePlayer);
-        updateGame(ctx);
-    }
-    
-    function movePlayer(event) {
-        switch (event.key) {
-            case "ArrowUp":
-                player.y -= speed;
-                break;
-            case "ArrowDown":
-                player.y += speed;
-                break;
-            case "ArrowLeft":
-                player.x -= speed;
-                break;
-            case "ArrowRight":
-                player.x += speed;
-                break;
-        }
-        checkCollision();
-    }
-    
-    function checkCollision() {
-        boxes.forEach((box, index) => {
-            const boxX = parseFloat(box.style.left);
-            const boxY = parseFloat(box.style.top);
-            if (
-                player.x < boxX + 100 &&
-                player.x + player.size > boxX &&
-                player.y < boxY + 50 &&
-                player.y + player.size > boxY
-            ) {
-                if (index === correctBoxIndex) {
-                    displayWinMessage();
-                }
+
+        gameScreen.innerHTML = ""; // 기존 요소 제거
+        words.forEach((word, index) => {
+            const box = document.createElement("div");
+            box.classList.add("box");
+            box.textContent = word;
+            box.style.left = `${Math.random() * 700 + 50}px`;
+            box.style.top = `${Math.random() * 500 + 50}px`;
+
+            if (index === correctBoxIndex) {
+                box.classList.add("correct-box");
             }
+
+            gameScreen.appendChild(box);
         });
-    }
-    
-    function displayWinMessage() {
-        alert("정답!");
-        restartGame.classList.remove("hidden");
+
+        notifyPlayers(); // 플레이어 모드를 선택한 사용자들에게 게임이 시작됨을 알림
+    });
+
+    function notifyPlayers() {
+        waitingScreen.classList.add("hidden");
+        gameScreen.classList.remove("hidden");
     }
 });
